@@ -1,0 +1,14 @@
+[Unit]
+Description=24/7 YouTube stream via ffmpeg
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+User=streamer
+WorkingDirectory=/opt/yt-playlist
+ExecStart=/usr/bin/ffmpeg -re -f concat -safe 0 -stream_loop -1 -i playlist.txt -c:v libx264 -preset veryfast -b:v 4500k -maxrate 4500k -bufsize 9000k -c:a aac -b:a 128k -ar 44100 -f flv rtmp://127.0.0.1/live/stream
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
